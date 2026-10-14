@@ -1,0 +1,573 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Records | Leave Management System</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --gold: #f5bd4f;
+            --black: #080a0d;
+            --card: #14181e;
+            --border: #373b42;
+            --text: #f5f5f5;
+            --muted: #b7bec8;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: var(--black);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        header {
+            background: #090b0e;
+            border-bottom: 1px solid #383127;
+        }
+
+        .navbar {
+            max-width: 1300px;
+            margin: auto;
+            padding: 18px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 18px;
+        }
+
+        .logo {
+            color: var(--gold);
+            font-size: 21px;
+            font-weight: bold;
+        }
+
+        nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 7px;
+        }
+
+        nav a {
+            color: #eeeeee;
+            text-decoration: none;
+            padding: 10px 12px;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: 0.3s;
+        }
+
+        nav a:hover,
+        nav a.active {
+            color: var(--gold);
+            background: #29241a;
+        }
+
+        .hero {
+            min-height: 220px;
+            padding: 45px 20px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background:
+                linear-gradient(rgba(5, 7, 10, 0.80),
+                                rgba(5, 7, 10, 0.93)),
+                url("https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1600&q=80")
+                center/cover no-repeat;
+            border-bottom: 1px solid #383127;
+        }
+
+        .hero img {
+            width: 46px;
+            height: 46px;
+            object-fit: contain;
+            margin-bottom: 12px;
+            filter: invert(77%) sepia(60%) saturate(600%)
+                    hue-rotate(345deg) brightness(105%);
+        }
+
+        .hero h1 {
+            font-size: clamp(28px, 4vw, 38px);
+            margin-bottom: 10px;
+        }
+
+        .hero h1 span {
+            color: var(--gold);
+        }
+
+        .hero p {
+            color: #d0d4dc;
+            font-size: 15px;
+        }
+
+        .container {
+            max-width: 1350px;
+            width: 95%;
+            margin: 35px auto;
+        }
+
+        .table-card {
+            background: linear-gradient(145deg, #171b22, #0e1116);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 25px;
+            box-shadow: 0 15px 40px #00000040;
+        }
+
+        .table-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .table-heading h2 {
+            font-size: 23px;
+            margin-bottom: 5px;
+        }
+
+        .table-heading h2 span {
+            color: var(--gold);
+        }
+
+        .table-heading p {
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .refresh-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 9px;
+            padding: 12px 17px;
+            border: none;
+            border-radius: 7px;
+            background: var(--gold);
+            color: #17130b;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .refresh-btn img {
+            width: 18px;
+            height: 18px;
+            object-fit: contain;
+            filter: brightness(0);
+        }
+
+        .refresh-btn:hover {
+            background: #ffd477;
+        }
+
+        .summary {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: #0b0e12;
+            border: 1px solid #303640;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 22px;
+        }
+
+        .summary img {
+            width: 30px;
+            height: 30px;
+            object-fit: contain;
+            filter: invert(77%) sepia(60%) saturate(600%)
+                    hue-rotate(345deg) brightness(105%);
+        }
+
+        .summary p {
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .summary strong {
+            display: block;
+            color: var(--gold);
+            font-size: 22px;
+        }
+
+        .table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+            border: 1px solid #343a44;
+            border-radius: 8px;
+        }
+
+        table {
+            width: 100%;
+            min-width: 950px;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        thead {
+            background: #29241a;
+        }
+
+        th {
+            color: var(--gold);
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 16px 14px;
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 15px 14px;
+            font-size: 14px;
+            color: #e5e7eb;
+            border-top: 1px solid #303640;
+            overflow-wrap: anywhere;
+        }
+
+        tbody tr {
+            background: #11151b;
+            transition: 0.2s;
+        }
+
+        tbody tr:nth-child(even) {
+            background: #171c23;
+        }
+
+        tbody tr:hover {
+            background: #25251f;
+        }
+
+        .employee-id {
+            color: var(--gold);
+            font-weight: bold;
+        }
+
+        .status-message {
+            display: none;
+            padding: 16px;
+            margin-top: 18px;
+            border-radius: 7px;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .status-message.error {
+            display: block;
+            color: #ffcaca;
+            background: #2a1717;
+            border: 1px solid #743333;
+        }
+
+        .status-message.info {
+            display: block;
+            color: #d0d4dc;
+            background: #171c23;
+            border: 1px solid #373b42;
+        }
+
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 25px;
+        }
+
+        .action-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+            padding: 12px 16px;
+            border-radius: 7px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: bold;
+            color: white;
+            background: #222831;
+            border: 1px solid #424955;
+            transition: 0.2s;
+        }
+
+        .action-link:hover {
+            border-color: var(--gold);
+            color: var(--gold);
+        }
+
+        .action-link img {
+            width: 18px;
+            height: 18px;
+            object-fit: contain;
+            filter: brightness(0) invert(1);
+        }
+
+        footer {
+            text-align: center;
+            padding: 22px 15px;
+            border-top: 1px solid #292d33;
+            color: var(--muted);
+            font-size: 13px;
+            margin-top: 35px;
+        }
+
+        footer span {
+            color: var(--gold);
+        }
+
+        @media (max-width: 650px) {
+            .navbar {
+                justify-content: center;
+            }
+
+            nav {
+                justify-content: center;
+            }
+
+            .table-card {
+                padding: 15px;
+            }
+
+            .table-heading {
+                align-items: stretch;
+                flex-direction: column;
+            }
+
+            .refresh-btn {
+                width: 100%;
+            }
+
+            .actions {
+                flex-direction: column;
+            }
+
+            .action-link {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <div class="navbar">
+        <div class="logo">Leave Management System</div>
+
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="list.html" class="active">All Records</a>
+            <a href="insert.html">Apply Leave</a>
+            <a href="listOne.html">Search</a>
+            <a href="update.html">Update</a>
+            <a href="delete.html">Delete</a>
+        </nav>
+    </div>
+</header>
+
+<section class="hero">
+    <img
+        src="https://cdn-icons-png.flaticon.com/512/1828/1828859.png"
+        alt="Records icon"
+    >
+
+    <h1>Employee <span>Leave Records</span></h1>
+
+    <p>View and manage all employee leave applications in one place.</p>
+</section>
+
+<main class="container">
+
+    <section class="table-card">
+
+        <div class="table-heading">
+            <div>
+                <h2>All <span>Leave Applications</span></h2>
+                <p>Employee leave information retrieved from the database.</p>
+            </div>
+
+            <button class="refresh-btn" id="refreshButton" type="button">
+                <img
+                    src="https://cdn-icons-png.flaticon.com/512/2805/2805355.png"
+                    alt=""
+                >
+                Refresh Records
+            </button>
+        </div>
+
+        <div class="summary">
+            <img
+                src="https://cdn-icons-png.flaticon.com/512/1077/1077114.png"
+                alt="Employees"
+            >
+            <div>
+                <p>Total Leave Records</p>
+                <strong id="recordCount">0</strong>
+            </div>
+        </div>
+
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Employee ID</th>
+                        <th>Name</th>
+                        <th>Department</th>
+                        <th>Type of Leave</th>
+                        <th>Number of Days</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+
+                <tbody id="recordsTable">
+                    <tr>
+                        <td colspan="6">Loading records...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div id="statusMessage" class="status-message" role="status"></div>
+
+        <div class="actions">
+            <a href="insert.html" class="action-link">
+                <img
+                    src="https://cdn-icons-png.flaticon.com/512/992/992651.png"
+                    alt=""
+                >
+                Add New Record
+            </a>
+
+            <a href="listOne.html" class="action-link">
+                <img
+                    src="https://cdn-icons-png.flaticon.com/512/54/54481.png"
+                    alt=""
+                >
+                Search Employee
+            </a>
+
+            <a href="index.html" class="action-link">
+                <img
+                    src="https://cdn-icons-png.flaticon.com/512/271/271220.png"
+                    alt=""
+                >
+                Back to Home
+            </a>
+        </div>
+
+    </section>
+
+</main>
+
+<footer>
+    &copy; 2026 <span>Leave Management System</span> |
+    All rights reserved.
+</footer>
+
+<script>
+    const recordsTable = document.getElementById("recordsTable");
+    const recordCount = document.getElementById("recordCount");
+    const statusMessage = document.getElementById("statusMessage");
+    const refreshButton = document.getElementById("refreshButton");
+
+    async function loadRecords() {
+        refreshButton.disabled = true;
+        recordsTable.replaceChildren();
+        recordCount.textContent = "0";
+        statusMessage.className = "status-message";
+        statusMessage.style.display = "none";
+
+        const loadingRow = document.createElement("tr");
+        const loadingCell = document.createElement("td");
+        loadingCell.colSpan = 6;
+        loadingCell.textContent = "Loading records...";
+        loadingRow.appendChild(loadingCell);
+        recordsTable.appendChild(loadingRow);
+
+        try {
+            const response = await fetch("/leaves");
+
+            if (!response.ok) {
+                throw new Error("Could not retrieve records from the server.");
+            }
+
+            const data = await response.json();
+
+            recordsTable.replaceChildren();
+            recordCount.textContent = data.length;
+
+            if (!Array.isArray(data) || data.length === 0) {
+                const row = document.createElement("tr");
+                const cell = document.createElement("td");
+                cell.colSpan = 6;
+                cell.textContent = "No leave records found.";
+                row.appendChild(cell);
+                recordsTable.appendChild(row);
+                return;
+            }
+
+            data.forEach(function(leave) {
+                const row = document.createElement("tr");
+
+                const values = [
+                    leave.EMPLOYEE_ID ?? leave.employee_id,
+                    leave.NAME ?? leave.name,
+                    leave.DEPARTMENT ?? leave.department,
+                    leave.TYPE_OF_LEAVE ?? leave.type_of_leave,
+                    leave.NUMBER_OF_DAYS ?? leave.number_of_days,
+                    leave.DESCRIPTION ?? leave.description
+                ];
+
+                values.forEach(function(value, index) {
+                    const cell = document.createElement("td");
+                    cell.textContent = value ?? "";
+
+                    if (index === 0) {
+                        cell.className = "employee-id";
+                    }
+
+                    row.appendChild(cell);
+                });
+
+                recordsTable.appendChild(row);
+            });
+
+        } catch (error) {
+            recordsTable.replaceChildren();
+
+            const row = document.createElement("tr");
+            const cell = document.createElement("td");
+            cell.colSpan = 6;
+            cell.textContent = "Unable to load records.";
+            row.appendChild(cell);
+            recordsTable.appendChild(row);
+
+            statusMessage.textContent =
+                error.message + " Make sure MySQL and app7-0.js are running.";
+            statusMessage.className = "status-message error";
+            statusMessage.style.display = "block";
+
+        } finally {
+            refreshButton.disabled = false;
+        }
+    }
+
+    refreshButton.addEventListener("click", loadRecords);
+
+    loadRecords();
+</script>
+
+</body>
+</html>

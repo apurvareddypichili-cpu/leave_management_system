@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Record | Leave Management System</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --gold: #f5bd4f;
+            --black: #080a0d;
+            --border: #373b42;
+            --text: #f5f5f5;
+            --muted: #b7bec8;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: var(--black);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        header {
+            background: #090b0e;
+            border-bottom: 1px solid #383127;
+        }
+
+        .navbar {
+            max-width: 1200px;
+            margin: auto;
+            padding: 18px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 18px;
+        }
+
+        .logo {
+            color: var(--gold);
+            font-size: 21px;
+            font-weight: bold;
+        }
+
+        nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 7px;
+        }
+
+        nav a {
+            color: #eeeeee;
+            text-decoration: none;
+            padding: 10px 12px;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: 0.3s;
+        }
+
+        nav a:hover,
+        nav a.active {
+            color: var(--gold);
+            background: #29241a;
+        }
+
+        .hero {
+            min-height: 220px;
+            padding: 45px 20px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background:
+                linear-gradient(rgba(5, 7, 10, 0.80),
+                                rgba(5, 7, 10, 0.93)),
+                url("https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1600&q=80")
+                center/cover no-repeat;
+            border-bottom: 1px solid #383127;
+        }
+
+        .hero img {
+            width: 46px;
+            height: 46px;
+            object-fit: contain;
+            margin-bottom: 12px;
+            filter: invert(77%) sepia(60%) saturate(600%)
+                    hue-rotate(345deg) brightness(105%);
+        }
+
+        .hero h1 {
+            font-size: clamp(28px, 4vw, 38px);
+            margin-bottom: 10px;
+        }
+
+        .hero h1 span {
+            color: var(--gold);
+        }
+
+        .hero p {
+            color: #d0d4dc;
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        .container {
+            width: min(850px, 92%);
+            margin: 38px auto;
+        }
+
+        .card {
+            background: linear-gradient(145deg, #171b22, #0e1116);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 30px;
+            box-shadow: 0 15px 40px #00000040;
+        }
+
+        .heading {
+            margin-bottom: 24px;
+            padding-bottom: 18px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .heading h2 {
+            font-size: 23px;
+            margin-bottom: 8px;
+        }
+
+        .heading h2 span {
+            color: var(--gold);
+        }
+
+        .heading p {
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        .search-area {
+            display: flex;
+            align-items: flex-end;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+        }
+
+        .search-area .form-group {
+            flex: 1;
+        }
+
+        label {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 9px;
+        }
+
+        .required {
+            color: var(--gold);
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 13px 14px;
+            border-radius: 7px;
+            border: 1px solid #454b55;
+            background: #090c10;
+            color: white;
+            outline: none;
+            font-size: 14px;
+            font-family: inherit;
+            transition: 0.2s;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            border-color: var(--gold);
+            box-shadow: 0 0 0 2px #f5bd4f20;
+        }
+
+        select option {
+            background: #14181e;
+            color: white;
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        #updateSection {
+            display: none;
+            border-top: 1px solid var(--border);
+            padding-top: 25px;
+            margin-top: 25px;
+        }
+
+        #updateSection h3 {
+            color: var(--gold);
+            font-size: 20px;
+            margin-bottom: 20px;
+        }
+
+        button,
+        .back-link {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            gap: 9px;
+            padding: 13px 18px;
+            border-radius: 7px;
+            border: none;
+            font-size: 14px;
+            font-weight: bold;
+            text-decoration: none;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        button img,
+        .back-link img {
+            width: 18px;
+            height: 18px;
+            object-fit: contain;
+        }
+
+        .search-btn,
+        .update-btn {
+            background: var(--gold);
+            color: #17130b;
+        }
+
+        .search-btn img,
+        .update-btn img {
+            filter: brightness(0);
+        }
+
+        .reset-btn {
+            background: #252b34;
+            color: white;
+            border: 1px solid #454b55;
+        }
+
+        .back-link {
+            background: #222831;
+            color: white;
+            border: 1px solid #424955;
+        }
+
+        .back-link img {
+            filter: brightness(0) invert(1);
+        }
+
+        button:hover,
+        .back-link:hover {
+            opacity: 0.86;
+            transform: translateY(-1px);
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 25px;
+        }
+
+        #message {
+            display: none;
+            margin-top: 20px;
+            padding: 14px;
+            border-radius: 7px;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        #message.success {
+            display: block;
+            background: #14291c;
+            border: 1px solid #2e7144;
+            color: #b8f3c8;
+        }
+
+        #message.error {
+            display: block;
+            background: #2a1717;
+            border: 1px solid #743333;
+            color: #ffcaca;
+        }
+
+        footer {
+            text-align: center;
+            padding: 22px 15px;
+            border-top: 1px solid #292d33;
+            color: var(--muted);
+            font-size: 13px;
+            margin-top: 35px;
+        }
+
+        footer span {
+            color: var(--gold);
+        }
+
+        @media (max-width: 650px) {
+            .navbar {
+                justify-content: center;
+            }
+
+            nav {
+                justify-content: center;
+            }
+
+            .card {
+                padding: 21px;
+            }
+
+            .search-area {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .search-btn {
+                width: 100%;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .full-width {
+                grid-column: auto;
+            }
+
+            .buttons button,
+            .buttons a {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <div class="navbar">
+        <div class="logo">Leave Management System</div>
+
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="list.html">All Records</a>
+            <a href="insert.html">Apply Leave</a>
+            <a href="listOne.html">Search</a>
+            <a href="update.html" class="active">Update</a>
+            <a href="delete.html">Delete</a>
+        </nav>
+    </div>
+</header>
+
+<section class="hero">
+    <img
+        src="https://cdn-icons-png.flaticon.com/512/1159/1159633.png"
+        alt="Update icon"
+    >
+
+    <h1>Update <span>Leave Record</span></h1>
+
+    <p>Find an existing employee record and update its leave details.</p>
+</section>
+
+<main class="container">
+
+    <section class="card">
+
+        <div class="heading">
+            <h2>Manage <span>Employee Details</span></h2>
+            <p>
+                Search using the Employee ID first.
+                The existing details will appear so you can edit them.
+            </p>
+        </div>
+
+        <form id="searchForm" class="search-area">
+            <div class="form-group">
+                <label for="employee_id">
+                    Employee ID <span class="required">*</span>
+                </label>
+
+                <input
+                    type="text"
+                    id="employee_id"
+                    placeholder="Enter Employee ID (example: E001)"
+                    maxlength="45"
+                    required
+                >
+            </div>
+
+            <button type="submit" class="search-btn" id="searchButton">
+                <img
+                    src="https://cdn-icons-png.flaticon.com/512/54/54481.png"
+                    alt=""
+                >
+                Search Record
+            </button>
+        </form>
+
+        <div id="message" role="status" aria-live="polite"></div>
+
+        <section id="updateSection">
+
+            <h3>Edit Leave Information</h3>
+
+            <form id="updateForm">
+
+                <div class="form-grid">
+
+                    <div class="form-group">
+                        <label for="name">
+                            Employee Name <span class="required">*</span>
+                        </label>
+
+                        <input
+                            type="text"
+                            id="name"
+                            maxlength="45"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="department">
+                            Department <span class="required">*</span>
+                        </label>
+
+                        <select id="department" required>
+                            <option value="">Select Department</option>
+                            <option value="IT">IT</option>
+                            <option value="HR">Human Resources</option>
+                            <option value="Finance">Finance</option>
+                            <option value="Marketing">Marketing</option>
+                            <option value="Sales">Sales</option>
+                            <option value="Admin">Administration</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="type_of_leave">
+                            Type of Leave <span class="required">*</span>
+                        </label>
+
+                        <select id="type_of_leave" required>
+                            <option value="">Select Leave Type</option>
+                            <option value="Casual Leave">Casual Leave</option>
+                            <option value="Sick Leave">Sick Leave</option>
+                            <option value="Annual Leave">Annual Leave</option>
+                            <option value="Emergency Leave">Emergency Leave</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="number_of_days">
+                            Number of Days <span class="required">*</span>
+                        </label>
+
+                        <input
+                            type="number"
+                            id="number_of_days"
+                            min="1"
+                            step="1"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label for="description">
+                            Description <span class="required">*</span>
+                        </label>
+
+                        <textarea
+                            id="description"
+                            maxlength="255"
+                            placeholder="Enter the reason for leave"
+                            required
+                        ></textarea>
+                    </div>
+
+                </div>
+
+                <div class="buttons">
+                    <button type="submit" class="update-btn" id="updateButton">
+                        <img
+                            src="https://cdn-icons-png.flaticon.com/512/1159/1159633.png"
+                            alt=""
+                        >
+                        Save Changes
+                    </button>
+
+                    <button type="reset" class="reset-btn">
+                        Clear Form
+                    </button>
+
+                    <a href="list.html" class="back-link">
+                        View All Records
+                    </a>
+
+                    <a href="index.html" class="back-link">
+                        Back to Home
+                    </a>
+                </div>
+
+            </form>
+
+        </section>
+
+    </section>
+
+</main>
+
+<footer>
+    &copy; 2026 <span>Leave Management System</span> |
+    All rights reserved.
+</footer>
+
+<script>
+    const searchForm = document.getElementById("searchForm");
+    const updateForm = document.getElementById("updateForm");
+    const employeeInput = document.getElementById("employee_id");
+    const updateSection = document.getElementById("updateSection");
+    const message = document.getElementById("message");
+    const searchButton = document.getElementById("searchButton");
+    const updateButton = document.getElementById("updateButton");
+
+    let currentEmployeeId = "";
+
+    function showMessage(text, success) {
+        message.textContent = text;
+        message.className = success ? "success" : "error";
+        message.style.display = "block";
+    }
+
+    function clearMessage() {
+        message.style.display = "none";
+        message.className = "";
+        message.textContent = "";
+    }
+
+    searchForm.addEventListener("submit", async function(event) {
+        event.preventDefault();
+
+        const employeeId = employeeInput.value.trim();
+
+        currentEmployeeId = "";
+        updateSection.style.display = "none";
+        clearMessage();
+        searchButton.disabled = true;
+
+        try {
+            const response = await fetch(
+                "/leaves/" + encodeURIComponent(employeeId)
+            );
+
+            if (!response.ok) {
+                throw new Error("Unable to retrieve the employee record.");
+            }
+
+            const data = await response.json();
+
+            if (!Array.isArray(data) || data.length === 0) {
+                showMessage(
+                    "No record found for Employee ID: " + employeeId,
+                    false
+                );
+                return;
+            }
+
+            const leave = data[0];
+
+            currentEmployeeId =
+                leave.EMPLOYEE_ID ?? leave.employee_id ?? employeeId;
+
+            document.getElementById("name").value =
+                leave.NAME ?? leave.name ?? "";
+
+            document.getElementById("department").value =
+                leave.DEPARTMENT ?? leave.department ?? "";
+
+            document.getElementById("type_of_leave").value =
+                leave.TYPE_OF_LEAVE ?? leave.type_of_leave ?? "";
+
+            document.getElementById("number_of_days").value =
+                leave.NUMBER_OF_DAYS ?? leave.number_of_days ?? "";
+
+            document.getElementById("description").value =
+                leave.DESCRIPTION ?? leave.description ?? "";
+
+            updateSection.style.display = "block";
+
+            showMessage("Record found. You can now edit the details.", true);
+
+        } catch (error) {
+            showMessage(
+                error.message + " Make sure the server and database are running.",
+                false
+            );
+        } finally {
+            searchButton.disabled = false;
+        }
+    });
+
+    updateForm.addEventListener("submit", async function(event) {
+        event.preventDefault();
+
+        if (!currentEmployeeId) {
+            showMessage("Search for an employee record first.", false);
+            return;
+        }
+
+        const days = Number(
+            document.getElementById("number_of_days").value
+        );
+
+        if (!Number.isInteger(days) || days <= 0) {
+            showMessage(
+                "Number of days must be a positive whole number.",
+                false
+            );
+            return;
+        }
+
+        const updatedData = {
+            name: document.getElementById("name").value.trim(),
+            department: document.getElementById("department").value,
+            type_of_leave: document.getElementById("type_of_leave").value,
+            number_of_days: days,
+            description: document.getElementById("description").value.trim()
+        };
+
+        updateButton.disabled = true;
+        clearMessage();
+
+        try {
+            const response = await fetch(
+                "/leaves/" + encodeURIComponent(currentEmployeeId),
+                {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(updatedData)
+                }
+            );
+
+            const result = await response.text();
+
+            if (!response.ok) {
+                throw new Error(result || "Unable to update the record.");
+            }
+
+            showMessage(result, true);
+
+        } catch (error) {
+            showMessage("Error: " + error.message, false);
+        } finally {
+            updateButton.disabled = false;
+        }
+    });
+
+    updateForm.addEventListener("reset", function() {
+        clearMessage();
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,600 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Search Employee | Leave Management System</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --gold: #f5bd4f;
+            --black: #080a0d;
+            --card: #14181e;
+            --border: #373b42;
+            --text: #f5f5f5;
+            --muted: #b7bec8;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: var(--black);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        header {
+            background: #090b0e;
+            border-bottom: 1px solid #383127;
+        }
+
+        .navbar {
+            max-width: 1200px;
+            margin: auto;
+            padding: 18px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 18px;
+        }
+
+        .logo {
+            color: var(--gold);
+            font-size: 21px;
+            font-weight: bold;
+        }
+
+        nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 7px;
+        }
+
+        nav a {
+            color: #eeeeee;
+            text-decoration: none;
+            padding: 10px 12px;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: 0.3s;
+        }
+
+        nav a:hover,
+        nav a.active {
+            color: var(--gold);
+            background: #29241a;
+        }
+
+        .hero {
+            min-height: 220px;
+            padding: 45px 20px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background:
+                linear-gradient(rgba(5, 7, 10, 0.80),
+                                rgba(5, 7, 10, 0.93)),
+                url("https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1600&q=80")
+                center/cover no-repeat;
+            border-bottom: 1px solid #383127;
+        }
+
+        .hero img {
+            width: 46px;
+            height: 46px;
+            object-fit: contain;
+            margin-bottom: 12px;
+            filter: invert(77%) sepia(60%) saturate(600%)
+                    hue-rotate(345deg) brightness(105%);
+        }
+
+        .hero h1 {
+            font-size: clamp(28px, 4vw, 38px);
+            margin-bottom: 10px;
+        }
+
+        .hero h1 span {
+            color: var(--gold);
+        }
+
+        .hero p {
+            color: #d0d4dc;
+            font-size: 15px;
+        }
+
+        .container {
+            width: min(1000px, 94%);
+            margin: 40px auto;
+        }
+
+        .card {
+            background: linear-gradient(145deg, #171b22, #0e1116);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 30px;
+            box-shadow: 0 15px 40px #00000040;
+        }
+
+        .card-heading {
+            margin-bottom: 25px;
+        }
+
+        .card-heading h2 {
+            font-size: 23px;
+            margin-bottom: 8px;
+        }
+
+        .card-heading h2 span {
+            color: var(--gold);
+        }
+
+        .card-heading p {
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        .search-form {
+            display: flex;
+            align-items: flex-end;
+            gap: 14px;
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            flex: 1;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 9px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px;
+            background: #090c10;
+            color: white;
+            border: 1px solid #454b55;
+            border-radius: 7px;
+            outline: none;
+            font-size: 15px;
+        }
+
+        input:focus {
+            border-color: var(--gold);
+            box-shadow: 0 0 0 2px #f5bd4f20;
+        }
+
+        button,
+        .back-link {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            gap: 9px;
+            padding: 13px 18px;
+            border-radius: 7px;
+            border: none;
+            font-size: 14px;
+            font-weight: bold;
+            text-decoration: none;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        button img,
+        .back-link img {
+            width: 18px;
+            height: 18px;
+            object-fit: contain;
+        }
+
+        .search-btn {
+            background: var(--gold);
+            color: #17130b;
+            white-space: nowrap;
+        }
+
+        .search-btn img {
+            filter: brightness(0);
+        }
+
+        .refresh-btn {
+            background: #252b34;
+            color: white;
+            border: 1px solid #454b55;
+        }
+
+        .refresh-btn img {
+            filter: brightness(0) invert(1);
+        }
+
+        button:hover,
+        .back-link:hover {
+            opacity: 0.86;
+            transform: translateY(-1px);
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        #resultSection {
+            display: none;
+            margin-top: 28px;
+        }
+
+        .result-heading {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .result-heading img {
+            width: 32px;
+            height: 32px;
+            object-fit: contain;
+            filter: invert(77%) sepia(60%) saturate(600%)
+                    hue-rotate(345deg) brightness(105%);
+        }
+
+        .result-heading h3 {
+            color: var(--gold);
+            font-size: 20px;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+            border: 1px solid #343a44;
+            border-radius: 8px;
+        }
+
+        table {
+            width: 100%;
+            min-width: 850px;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        thead {
+            background: #29241a;
+        }
+
+        th {
+            color: var(--gold);
+            padding: 15px 13px;
+            font-size: 12px;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 15px 13px;
+            font-size: 14px;
+            color: #e5e7eb;
+            border-top: 1px solid #303640;
+            overflow-wrap: anywhere;
+        }
+
+        tbody tr {
+            background: #11151b;
+        }
+
+        .status-message {
+            display: none;
+            margin-top: 20px;
+            padding: 14px;
+            border-radius: 7px;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .status-message.error {
+            display: block;
+            background: #2a1717;
+            border: 1px solid #743333;
+            color: #ffcaca;
+        }
+
+        .status-message.success {
+            display: block;
+            background: #14291c;
+            border: 1px solid #2e7144;
+            color: #b8f3c8;
+        }
+
+        .bottom {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 25px;
+        }
+
+        .back-link {
+            background: #222831;
+            color: white;
+            border: 1px solid #424955;
+        }
+
+        .back-link img {
+            filter: brightness(0) invert(1);
+        }
+
+        footer {
+            text-align: center;
+            padding: 22px 15px;
+            border-top: 1px solid #292d33;
+            color: var(--muted);
+            font-size: 13px;
+            margin-top: 35px;
+        }
+
+        footer span {
+            color: var(--gold);
+        }
+
+        @media (max-width: 650px) {
+            .navbar {
+                justify-content: center;
+            }
+
+            nav {
+                justify-content: center;
+            }
+
+            .card {
+                padding: 20px;
+            }
+
+            .search-form {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .search-btn,
+            .refresh-btn {
+                width: 100%;
+            }
+
+            .bottom {
+                flex-direction: column;
+            }
+
+            .back-link {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <div class="navbar">
+        <div class="logo">Leave Management System</div>
+
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="list.html">All Records</a>
+            <a href="insert.html">Apply Leave</a>
+            <a href="listOne.html" class="active">Search</a>
+            <a href="update.html">Update</a>
+            <a href="delete.html">Delete</a>
+        </nav>
+    </div>
+</header>
+
+<section class="hero">
+    <img
+        src="https://cdn-icons-png.flaticon.com/512/54/54481.png"
+        alt="Search icon"
+    >
+
+    <h1>Search <span>Employee Record</span></h1>
+
+    <p>Find an employee's leave details using their Employee ID.</p>
+</section>
+
+<main class="container">
+
+    <section class="card">
+
+        <div class="card-heading">
+            <h2>Find an <span>Employee</span></h2>
+            <p>
+                Enter the exact Employee ID stored in the database
+                to view that employee's leave record.
+            </p>
+        </div>
+
+        <form id="searchForm" class="search-form">
+
+            <div class="form-group">
+                <label for="employee_id">Employee ID</label>
+
+                <input
+                    type="text"
+                    id="employee_id"
+                    name="employee_id"
+                    placeholder="Example: E001"
+                    maxlength="45"
+                    required
+                >
+            </div>
+
+            <button type="submit" class="search-btn" id="searchButton">
+                <img
+                    src="https://cdn-icons-png.flaticon.com/512/54/54481.png"
+                    alt=""
+                >
+                Search Record
+            </button>
+
+        </form>
+
+        <div id="statusMessage" class="status-message" role="status"></div>
+
+        <section id="resultSection">
+
+            <div class="result-heading">
+                <img
+                    src="https://cdn-icons-png.flaticon.com/512/1077/1077114.png"
+                    alt=""
+                >
+                <h3>Employee Leave Details</h3>
+            </div>
+
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Employee ID</th>
+                            <th>Name</th>
+                            <th>Department</th>
+                            <th>Type of Leave</th>
+                            <th>Number of Days</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="resultTable"></tbody>
+                </table>
+            </div>
+
+            <div class="bottom">
+                <button type="button" class="refresh-btn" id="searchAgain">
+                    Search Another Employee
+                </button>
+
+                <a href="update.html" class="back-link">Update Record</a>
+
+                <a href="delete.html" class="back-link">Delete Record</a>
+            </div>
+
+        </section>
+
+        <div class="bottom">
+            <a href="index.html" class="back-link">
+                <img
+                    src="https://cdn-icons-png.flaticon.com/512/271/271220.png"
+                    alt=""
+                >
+                Back to Home
+            </a>
+        </div>
+
+    </section>
+
+</main>
+
+<footer>
+    &copy; 2026 <span>Leave Management System</span> |
+    All rights reserved.
+</footer>
+
+<script>
+    const searchForm = document.getElementById("searchForm");
+    const employeeInput = document.getElementById("employee_id");
+    const searchButton = document.getElementById("searchButton");
+    const statusMessage = document.getElementById("statusMessage");
+    const resultSection = document.getElementById("resultSection");
+    const resultTable = document.getElementById("resultTable");
+    const searchAgain = document.getElementById("searchAgain");
+
+    searchForm.addEventListener("submit", async function(event) {
+        event.preventDefault();
+
+        const employeeId = employeeInput.value.trim();
+
+        statusMessage.style.display = "none";
+        statusMessage.className = "status-message";
+        resultSection.style.display = "none";
+        resultTable.replaceChildren();
+        searchButton.disabled = true;
+
+        try {
+            const response = await fetch(
+                "/leaves/" + encodeURIComponent(employeeId)
+            );
+
+            if (!response.ok) {
+                throw new Error("Unable to retrieve employee details.");
+            }
+
+            const data = await response.json();
+
+            if (!Array.isArray(data) || data.length === 0) {
+                showMessage(
+                    "No employee record found for ID: " + employeeId,
+                    false
+                );
+                return;
+            }
+
+            const leave = data[0];
+
+            const values = [
+                leave.EMPLOYEE_ID ?? leave.employee_id,
+                leave.NAME ?? leave.name,
+                leave.DEPARTMENT ?? leave.department,
+                leave.TYPE_OF_LEAVE ?? leave.type_of_leave,
+                leave.NUMBER_OF_DAYS ?? leave.number_of_days,
+                leave.DESCRIPTION ?? leave.description
+            ];
+
+            const row = document.createElement("tr");
+
+            values.forEach(function(value) {
+                const cell = document.createElement("td");
+                cell.textContent = value ?? "";
+                row.appendChild(cell);
+            });
+
+            resultTable.appendChild(row);
+            resultSection.style.display = "block";
+
+            showMessage("Employee record found successfully.", true);
+
+        } catch (error) {
+            showMessage(
+                error.message + " Check that the server and database are running.",
+                false
+            );
+        } finally {
+            searchButton.disabled = false;
+        }
+    });
+
+    function showMessage(text, success) {
+        statusMessage.textContent = text;
+        statusMessage.className =
+            success ? "status-message success" : "status-message error";
+        statusMessage.style.display = "block";
+    }
+
+    searchAgain.addEventListener("click", function() {
+        employeeInput.value = "";
+        resultTable.replaceChildren();
+        resultSection.style.display = "none";
+        statusMessage.style.display = "none";
+        employeeInput.focus();
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apply Leave | Leave Management System</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --gold: #f5bd4f;
+            --black: #080a0d;
+            --card: #14181e;
+            --border: #373b42;
+            --text: #f5f5f5;
+            --muted: #b7bec8;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: var(--black);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        header {
+            background: #090b0e;
+            border-bottom: 1px solid #383127;
+        }
+
+        .navbar {
+            max-width: 1200px;
+            margin: auto;
+            padding: 18px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 18px;
+        }
+
+        .logo {
+            color: var(--gold);
+            font-size: 21px;
+            font-weight: bold;
+        }
+
+        nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 7px;
+        }
+
+        nav a {
+            color: #eeeeee;
+            text-decoration: none;
+            padding: 10px 12px;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: 0.3s;
+        }
+
+        nav a:hover,
+        nav a.active {
+            color: var(--gold);
+            background: #29241a;
+        }
+
+        .hero {
+            min-height: 220px;
+            padding: 45px 20px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background:
+                linear-gradient(rgba(5, 7, 10, 0.80),
+                                rgba(5, 7, 10, 0.93)),
+                url("https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1600&q=80")
+                center/cover no-repeat;
+            border-bottom: 1px solid #383127;
+        }
+
+        .hero img {
+            width: 48px;
+            height: 48px;
+            object-fit: contain;
+            margin-bottom: 12px;
+            filter: invert(77%) sepia(60%) saturate(600%)
+                    hue-rotate(345deg) brightness(105%);
+        }
+
+        .hero h1 {
+            font-size: clamp(28px, 4vw, 38px);
+            margin-bottom: 10px;
+        }
+
+        .hero h1 span {
+            color: var(--gold);
+        }
+
+        .hero p {
+            color: #d0d4dc;
+            font-size: 15px;
+        }
+
+        .container {
+            width: min(850px, 92%);
+            margin: 38px auto;
+        }
+
+        .form-card {
+            background: linear-gradient(145deg, #171b22, #0e1116);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 32px;
+            box-shadow: 0 15px 40px #00000040;
+        }
+
+        .form-heading {
+            margin-bottom: 25px;
+            padding-bottom: 18px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .form-heading h2 {
+            font-size: 23px;
+            margin-bottom: 8px;
+        }
+
+        .form-heading h2 span {
+            color: var(--gold);
+        }
+
+        .form-heading p {
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 22px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 9px;
+        }
+
+        .required {
+            color: var(--gold);
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 13px 14px;
+            border-radius: 7px;
+            border: 1px solid #454b55;
+            background: #090c10;
+            color: white;
+            outline: none;
+            font-size: 14px;
+            font-family: inherit;
+            transition: 0.2s;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            border-color: var(--gold);
+            box-shadow: 0 0 0 2px #f5bd4f20;
+        }
+
+        select option {
+            background: #14181e;
+            color: white;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 110px;
+        }
+
+        .hint {
+            color: #929aa6;
+            font-size: 12px;
+            margin-top: 7px;
+        }
+
+        .buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 28px;
+        }
+
+        button,
+        .back-link {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            gap: 9px;
+            padding: 13px 20px;
+            border-radius: 7px;
+            border: none;
+            font-size: 14px;
+            font-weight: bold;
+            text-decoration: none;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        button img,
+        .back-link img {
+            width: 18px;
+            height: 18px;
+            object-fit: contain;
+        }
+
+        .submit-btn {
+            background: var(--gold);
+            color: #17130b;
+        }
+
+        .submit-btn img {
+            filter: brightness(0);
+        }
+
+        .reset-btn {
+            background: #252b34;
+            color: white;
+            border: 1px solid #454b55;
+        }
+
+        .back-link {
+            background: transparent;
+            color: var(--muted);
+            border: 1px solid #454b55;
+        }
+
+        .back-link img {
+            filter: brightness(0) invert(1);
+        }
+
+        button:hover,
+        .back-link:hover {
+            opacity: 0.85;
+            transform: translateY(-1px);
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        #message {
+            display: none;
+            margin-top: 20px;
+            padding: 14px;
+            border-radius: 7px;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        #message.success {
+            display: block;
+            background: #14291c;
+            border: 1px solid #2e7144;
+            color: #b8f3c8;
+        }
+
+        #message.error {
+            display: block;
+            background: #2a1717;
+            border: 1px solid #743333;
+            color: #ffcaca;
+        }
+
+        footer {
+            text-align: center;
+            padding: 22px 15px;
+            border-top: 1px solid #292d33;
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        footer span {
+            color: var(--gold);
+        }
+
+        @media (max-width: 650px) {
+            .navbar {
+                justify-content: center;
+            }
+
+            nav {
+                justify-content: center;
+            }
+
+            .form-card {
+                padding: 22px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .full-width {
+                grid-column: auto;
+            }
+
+            .buttons button,
+            .buttons a {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <div class="navbar">
+        <div class="logo">Leave Management System</div>
+
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="list.html">All Records</a>
+            <a href="insert.html" class="active">Apply Leave</a>
+            <a href="listOne.html">Search</a>
+            <a href="update.html">Update</a>
+            <a href="delete.html">Delete</a>
+        </nav>
+    </div>
+</header>
+
+<section class="hero">
+    <img
+        src="https://cdn-icons-png.flaticon.com/512/992/992651.png"
+        alt="Apply leave icon"
+    >
+    <h1>Apply for <span>Leave</span></h1>
+    <p>Enter the employee details below to create a new leave record.</p>
+</section>
+
+<main class="container">
+
+    <section class="form-card">
+
+        <div class="form-heading">
+            <h2>Employee <span>Leave Application</span></h2>
+            <p>
+                Fill in all the required fields accurately.
+                Employee ID must be unique.
+            </p>
+        </div>
+
+        <form id="leaveForm">
+
+            <div class="form-grid">
+
+                <div class="form-group">
+                    <label for="employee_id">
+                        Employee ID <span class="required">*</span>
+                    </label>
+                    <input
+                        type="text"
+                        id="employee_id"
+                        name="employee_id"
+                        placeholder="Example: E007"
+                        maxlength="45"
+                        required
+                    >
+                    <span class="hint">Enter a unique employee ID.</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="name">
+                        Employee Name <span class="required">*</span>
+                    </label>
+                    <input
+                        type="text"
+                        id="name"
+                        name="name"
+                        placeholder="Enter full name"
+                        maxlength="45"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="department">
+                        Department <span class="required">*</span>
+                    </label>
+                    <select id="department" name="department" required>
+                        <option value="">Select Department</option>
+                        <option value="IT">IT</option>
+                        <option value="HR">Human Resources</option>
+                        <option value="Finance">Finance</option>
+                        <option value="Marketing">Marketing</option>
+                        <option value="Sales">Sales</option>
+                        <option value="Admin">Administration</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="type_of_leave">
+                        Type of Leave <span class="required">*</span>
+                    </label>
+                    <select
+                        id="type_of_leave"
+                        name="type_of_leave"
+                        required
+                    >
+                        <option value="">Select Leave Type</option>
+                        <option value="Casual Leave">Casual Leave</option>
+                        <option value="Sick Leave">Sick Leave</option>
+                        <option value="Annual Leave">Annual Leave</option>
+                        <option value="Emergency Leave">Emergency Leave</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="number_of_days">
+                        Number of Days <span class="required">*</span>
+                    </label>
+                    <input
+                        type="number"
+                        id="number_of_days"
+                        name="number_of_days"
+                        min="1"
+                        step="1"
+                        placeholder="Enter number of leave days"
+                        required
+                    >
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="description">
+                        Description <span class="required">*</span>
+                    </label>
+                    <textarea
+                        id="description"
+                        name="description"
+                        maxlength="255"
+                        placeholder="Explain the reason for leave..."
+                        required
+                    ></textarea>
+                    <span class="hint">Maximum 255 characters.</span>
+                </div>
+
+            </div>
+
+            <div class="buttons">
+                <button type="submit" class="submit-btn" id="submitButton">
+                    <img
+                        src="https://cdn-icons-png.flaticon.com/512/992/992651.png"
+                        alt=""
+                    >
+                    Submit Application
+                </button>
+
+                <button type="reset" class="reset-btn">
+                    Clear Form
+                </button>
+
+                <a href="index.html" class="back-link">
+                    <img
+                        src="https://cdn-icons-png.flaticon.com/512/271/271220.png"
+                        alt=""
+                    >
+                    Back to Home
+                </a>
+            </div>
+
+            <div id="message" role="status" aria-live="polite"></div>
+
+        </form>
+
+    </section>
+
+</main>
+
+<footer>
+    &copy; 2026 <span>Leave Management System</span> |
+    All rights reserved.
+</footer>
+
+<script>
+    const leaveForm = document.getElementById("leaveForm");
+    const message = document.getElementById("message");
+    const submitButton = document.getElementById("submitButton");
+
+    leaveForm.addEventListener("submit", async function(event) {
+        event.preventDefault();
+
+        message.style.display = "none";
+        message.className = "";
+        submitButton.disabled = true;
+
+        const leaveData = {
+            employee_id: document.getElementById("employee_id").value.trim(),
+            name: document.getElementById("name").value.trim(),
+            department: document.getElementById("department").value,
+            type_of_leave: document.getElementById("type_of_leave").value,
+            number_of_days: Number(
+                document.getElementById("number_of_days").value
+            ),
+            description: document.getElementById("description").value.trim()
+        };
+
+        if (leaveData.number_of_days < 1 ||
+            !Number.isInteger(leaveData.number_of_days)) {
+            showMessage("Enter a valid positive whole number of leave days.", false);
+            submitButton.disabled = false;
+            return;
+        }
+
+        try {
+            const response = await fetch("/leaves", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(leaveData)
+            });
+
+            const result = await response.text();
+
+            if (!response.ok) {
+                throw new Error(result || "Unable to submit the application.");
+            }
+
+            alert("🎉 Success! Record added successfully!");
+            leaveForm.reset();
+
+        } catch (error) {
+            showMessage(
+                "Could not save the leave record. " + error.message,
+                false
+            );
+        } finally {
+            submitButton.disabled = false;
+        }
+    });
+
+    function showMessage(text, success) {
+        message.textContent = text;
+        message.className = success ? "success" : "error";
+        message.style.display = "block";
+    }
+
+    leaveForm.addEventListener("reset", function() {
+        message.style.display = "none";
+        message.className = "";
+    });
+</script>
+
+</body>
+</html>

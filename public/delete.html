@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delete Record | Leave Management System</title>
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    :root {
+        --gold: #f5bd4f;
+        --black: #080a0d;
+        --card: #14181e;
+        --border: #373b42;
+        --text: #f5f5f5;
+        --muted: #b7bec8;
+        --red: #ef5350;
+    }
+
+    body {
+        font-family: Arial, sans-serif;
+        background: var(--black);
+        color: var(--text);
+        min-height: 100vh;
+    }
+
+    header {
+        background: #090b0e;
+        border-bottom: 1px solid #383127;
+    }
+
+    .navbar {
+        max-width: 1200px;
+        margin: auto;
+        padding: 20px 24px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 18px;
+    }
+
+    .logo {
+        color: var(--gold);
+        font-size: 21px;
+        font-weight: bold;
+    }
+
+    nav {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    nav a {
+        color: #eeeeee;
+        text-decoration: none;
+        padding: 10px 12px;
+        border-radius: 6px;
+        font-size: 14px;
+    }
+
+    nav a:hover,
+    nav a.active {
+        color: var(--gold);
+        background: #29241a;
+    }
+
+    .hero {
+        min-height: 220px;
+        padding: 50px 20px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        background:
+            linear-gradient(
+                rgba(5, 7, 10, 0.82),
+                rgba(5, 7, 10, 0.92)
+            ),
+            url("https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1600&q=80")
+            center/cover no-repeat;
+        border-bottom: 1px solid #383127;
+    }
+
+    .hero img {
+        width: 48px;
+        height: 48px;
+        object-fit: contain;
+        margin-bottom: 12px;
+        filter: invert(77%) sepia(60%) saturate(600%)
+                hue-rotate(345deg) brightness(105%);
+    }
+
+    .hero h1 {
+        font-size: clamp(28px, 4vw, 38px);
+        margin-bottom: 10px;
+    }
+
+    .hero h1 span {
+        color: var(--gold);
+    }
+
+    .hero p {
+        color: #d0d4dc;
+        font-size: 15px;
+    }
+
+    .container {
+        width: min(700px, 92%);
+        margin: 40px auto;
+    }
+
+    .card {
+        background: linear-gradient(145deg, #171b22, #0e1116);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 30px;
+        box-shadow: 0 15px 40px #00000040;
+    }
+
+    .card h2 {
+        font-size: 22px;
+        margin-bottom: 12px;
+    }
+
+    .card h2 span {
+        color: var(--gold);
+    }
+
+    .description {
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.7;
+        margin-bottom: 25px;
+    }
+
+    .warning {
+        display: flex;
+        gap: 12px;
+        align-items: flex-start;
+        background: #2a1717;
+        border: 1px solid #743333;
+        border-radius: 8px;
+        padding: 15px;
+        margin-bottom: 25px;
+        color: #ffcaca;
+        font-size: 14px;
+        line-height: 1.6;
+    }
+
+    .warning img {
+        width: 22px;
+        height: 22px;
+        object-fit: contain;
+        flex-shrink: 0;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 9px;
+        font-size: 14px;
+        font-weight: bold;
+    }
+
+    select {
+        width: 100%;
+        padding: 14px;
+        background: #090c10;
+        color: white;
+        border: 1px solid #454b55;
+        border-radius: 7px;
+        outline: none;
+        font-size: 15px;
+        margin-bottom: 16px;
+        cursor: pointer;
+    }
+
+    select:focus {
+        border-color: var(--gold);
+        box-shadow: 0 0 0 2px #f5bd4f20;
+    }
+
+    select option {
+        background: #14181e;
+        color: white;
+    }
+
+    button,
+    .back-link {
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        gap: 9px;
+        padding: 13px 18px;
+        border-radius: 7px;
+        border: none;
+        font-weight: bold;
+        font-size: 14px;
+        text-decoration: none;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+
+    button img,
+    .back-link img {
+        width: 18px;
+        height: 18px;
+        object-fit: contain;
+    }
+
+    .search-btn {
+        background: var(--gold);
+        color: #17130b;
+    }
+
+    .search-btn img {
+        filter: brightness(0);
+    }
+
+    .delete-btn {
+        background: var(--red);
+        color: white;
+        width: 100%;
+        margin-top: 20px;
+    }
+
+    .delete-btn img {
+        filter: brightness(0) invert(1);
+    }
+
+    button:hover,
+    .back-link:hover {
+        opacity: 0.86;
+        transform: translateY(-1px);
+    }
+
+    #recordSection {
+        display: none;
+        margin-top: 28px;
+        padding-top: 25px;
+        border-top: 1px solid var(--border);
+    }
+
+    #recordSection h3 {
+        margin-bottom: 16px;
+        color: var(--gold);
+    }
+
+    .record-details {
+        background: #0a0d11;
+        border: 1px solid #353a43;
+        border-radius: 8px;
+        padding: 18px;
+        overflow-wrap: anywhere;
+    }
+
+    .detail-row {
+        display: grid;
+        grid-template-columns: 155px 1fr;
+        gap: 12px;
+        padding: 10px 0;
+        border-bottom: 1px solid #272c34;
+        font-size: 14px;
+    }
+
+    .detail-row:last-child {
+        border-bottom: none;
+    }
+
+    .detail-label {
+        color: var(--gold);
+        font-weight: bold;
+    }
+
+    .bottom {
+        text-align: center;
+        margin-top: 25px;
+    }
+
+    .back-link {
+        background: #222831;
+        color: white;
+        border: 1px solid #424955;
+    }
+
+    .back-link img {
+        filter: brightness(0) invert(1);
+    }
+
+    footer {
+        text-align: center;
+        padding: 22px 15px;
+        border-top: 1px solid #292d33;
+        color: var(--muted);
+        font-size: 13px;
+    }
+
+    footer span {
+        color: var(--gold);
+    }
+
+    @media (max-width: 650px) {
+        .navbar {
+            justify-content: center;
+        }
+
+        nav {
+            justify-content: center;
+        }
+
+        .card {
+            padding: 22px;
+        }
+
+        .detail-row {
+            grid-template-columns: 1fr;
+            gap: 4px;
+        }
+
+        .search-btn {
+            width: 100%;
+        }
+    }
+</style>
+
+</head>
+
+<body>
+
+<header>
+    <div class="navbar">
+        <div class="logo">Leave Management System</div>
+
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="list.html">All Records</a>
+        <a href="insert.html">Apply Leave</a>
+        <a href="listOne.html">Search</a>
+        <a href="update.html">Update</a>
+        <a href="delete.html" class="active">Delete</a>
+    </nav>
+</div>
+
+</header>
+
+<section class="hero">
+    <img
+        src="https://cdn-icons-png.flaticon.com/512/1214/1214428.png"
+        alt="Delete record icon"
+    >
+
+<h1>Delete <span>Leave Record</span></h1>
+<p>Select an employee record and remove it when necessary.</p>
+
+</section>
+
+<main class="container">
+    <section class="card">
+
+    <h2>Remove an <span>Employee Record</span></h2>
+
+    <p class="description">
+        Select the Employee ID from the dropdown to find the leave record.
+        Review the details carefully before confirming deletion.
+    </p>
+
+    <div class="warning">
+        <img
+            src="https://cdn-icons-png.flaticon.com/512/564/564619.png"
+            alt="Warning"
+        >
+
+        <div>
+            <strong>Important notice</strong><br>
+            Deleting a record is permanent. The selected record
+            will be removed from the database.
+        </div>
+    </div>
+
+    <form id="searchForm">
+        <label for="employee_id">Employee ID</label>
+
+        <select id="employee_id" required>
+            <option value="">Loading Employee IDs...</option>
+        </select>
+
+        <button type="submit" class="search-btn">
+            <img
+                src="https://cdn-icons-png.flaticon.com/512/54/54481.png"
+                alt=""
+            >
+            Search Record
+        </button>
+    </form>
+
+    <section id="recordSection">
+        <h3>Employee Leave Details</h3>
+
+        <div id="recordDetails" class="record-details"></div>
+
+        <button type="button" id="deleteButton" class="delete-btn">
+            <img
+                src="https://cdn-icons-png.flaticon.com/512/1214/1214428.png"
+                alt=""
+            >
+            Permanently Delete Record
+        </button>
+    </section>
+
+    <div class="bottom">
+        <a href="index.html" class="back-link">
+            <img
+                src="https://cdn-icons-png.flaticon.com/512/271/271220.png"
+                alt=""
+            >
+            Back to Home
+        </a>
+    </div>
+
+</section>
+</main>
+
+<footer>
+    &copy; 2026 <span>Leave Management System</span> |
+    All rights reserved.
+</footer>
+
+<script>
+    let selectedEmployeeId = "";
+
+    const searchForm = document.getElementById("searchForm");
+    const employeeDropdown = document.getElementById("employee_id");
+    const recordSection = document.getElementById("recordSection");
+    const recordDetails = document.getElementById("recordDetails");
+    const deleteButton = document.getElementById("deleteButton");
+
+    // Load Employee IDs into the dropdown
+    async function loadEmployeeIds() {
+        try {
+            const response = await fetch("/leaves");
+
+            if (!response.ok) {
+                throw new Error("Could not load employee records.");
+            }
+
+            const data = await response.json();
+
+            if (!Array.isArray(data)) {
+                throw new Error("The server did not return a list of records.");
+            }
+
+            employeeDropdown.replaceChildren();
+
+            const defaultOption = document.createElement("option");
+            defaultOption.value = "";
+            defaultOption.textContent = "-- Select Employee ID --";
+            employeeDropdown.appendChild(defaultOption);
+
+            const employeeIds = [
+                ...new Set(
+                    data
+                        .map(leave =>
+                            leave.EMPLOYEE_ID ?? leave.employee_id
+                        )
+                        .filter(id =>
+                            id !== undefined &&
+                            id !== null &&
+                            id !== ""
+                        )
+                )
+            ];
+
+            employeeIds.forEach(id => {
+                const option = document.createElement("option");
+                option.value = id;
+                option.textContent = id;
+                employeeDropdown.appendChild(option);
+            });
+
+            if (employeeIds.length === 0) {
+                defaultOption.textContent = "-- No Employee IDs found --";
+            }
+
+        } catch (error) {
+            employeeDropdown.replaceChildren();
+
+            const option = document.createElement("option");
+            option.value = "";
+            option.textContent = "-- Failed to load Employee IDs --";
+            employeeDropdown.appendChild(option);
+
+            console.error("Error loading Employee IDs:", error);
+
+            alert(
+                "Unable to load Employee IDs. Check your server and /leaves route."
+            );
+        }
+    }
+
+    // Search the selected employee
+    searchForm.addEventListener("submit", async function(event) {
+        event.preventDefault();
+
+        const employeeId = employeeDropdown.value;
+
+        if (!employeeId) {
+            alert("Please select an Employee ID.");
+            return;
+        }
+
+        selectedEmployeeId = "";
+        recordSection.style.display = "none";
+        recordDetails.replaceChildren();
+
+        try {
+            const response = await fetch(
+                "/leaves/" + encodeURIComponent(employeeId)
+            );
+
+            if (!response.ok) {
+                throw new Error("Unable to search the record.");
+            }
+
+            const data = await response.json();
+
+            if (!Array.isArray(data) || data.length === 0) {
+                alert("No record found for this Employee ID.");
+                return;
+            }
+
+            const leave = data[0];
+
+            selectedEmployeeId =
+                leave.EMPLOYEE_ID ?? leave.employee_id ?? employeeId;
+
+            const fields = [
+                ["Employee ID", selectedEmployeeId],
+                ["Name", leave.NAME ?? leave.name],
+                ["Department", leave.DEPARTMENT ?? leave.department],
+                ["Type of Leave", leave.TYPE_OF_LEAVE ?? leave.type_of_leave],
+                ["Number of Days", leave.NUMBER_OF_DAYS ?? leave.number_of_days],
+                ["Description", leave.DESCRIPTION ?? leave.description]
+            ];
+
+            fields.forEach(([label, value]) => {
+                const row = document.createElement("div");
+                row.className = "detail-row";
+
+                const labelElement = document.createElement("div");
+                labelElement.className = "detail-label";
+                labelElement.textContent = label;
+
+                const valueElement = document.createElement("div");
+                valueElement.textContent = value ?? "";
+
+                row.append(labelElement, valueElement);
+                recordDetails.appendChild(row);
+            });
+
+            recordSection.style.display = "block";
+
+        } catch (error) {
+            alert("Error: " + error.message);
+        }
+    });
+
+    // Delete the selected employee record
+    deleteButton.addEventListener("click", async function() {
+        if (!selectedEmployeeId) {
+            alert("Please search for an employee record first.");
+            return;
+        }
+
+        const confirmed = confirm(
+            "Are you sure you want to permanently delete the record for " +
+            selectedEmployeeId + "?"
+        );
+
+        if (!confirmed) {
+            return;
+        }
+
+        try {
+            const response = await fetch(
+                "/leaves/" + encodeURIComponent(selectedEmployeeId),
+                {
+                    method: "DELETE"
+                }
+            );
+
+            const message = await response.text();
+
+            if (!response.ok) {
+                throw new Error(message || "Could not delete the record.");
+            }
+
+            alert(message || "Record deleted successfully.");
+
+            window.location.href = "list.html";
+
+        } catch (error) {
+            alert("Error: " + error.message);
+        }
+    });
+
+    // Load IDs when the page opens
+    loadEmployeeIds();
+</script>
+
+</body>
+</html>
